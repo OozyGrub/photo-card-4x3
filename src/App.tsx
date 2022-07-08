@@ -2,72 +2,9 @@ import { chunk, padStart, round } from "lodash";
 import { observer } from "mobx-react";
 import React, { ChangeEvent, useState } from "react";
 import { exportComponentAsJPEG } from "react-component-export-image";
+import { ImageUpload } from "./components/ImageUpload";
+import { PhotoCard } from "./components/PhotoCard";
 import { resolution, ResolutionMode } from "./store/resolution";
-
-const DividedPhotoCard = ({ src }: { src: string }) => {
-  return (
-    <div
-      className="photo-card-4x3"
-      style={{ padding: "4%", overflow: "hidden" }}
-    >
-      {src && (
-        <div
-          style={{
-            position: "relative",
-            width: "100%",
-            height: 0,
-            padding: "100% 0 0",
-            overflow: "hidden",
-            backgroundImage: `url("${src}")`,
-            backgroundSize: "cover",
-          }}
-        />
-      )}
-    </div>
-  );
-};
-
-interface PhotoCardProps {
-  images: string[];
-  ppi: number;
-}
-const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(
-  ({ images, ppi }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className="photo-card-4x6"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr min-content 1fr",
-          width: 6 * ppi,
-          height: 4 * ppi,
-          background: "white",
-          border: "1px solid lightgrey",
-        }}
-      >
-        <DividedPhotoCard src={images[0]} />
-        <div
-          className="photo-card-divider"
-          style={{ borderLeft: "1px dashed lightgrey" }}
-        />
-        <DividedPhotoCard src={images[1]} />
-      </div>
-    );
-  }
-);
-
-const ImageUpload = ({
-  onChange,
-}: {
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-}) => {
-  return (
-    <form>
-      <input type="file" accept="image/*" multiple onChange={onChange} />
-    </form>
-  );
-};
 
 const App = observer(() => {
   const componentsRef = React.useRef<HTMLDivElement[]>([]);
