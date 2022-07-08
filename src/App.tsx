@@ -11,8 +11,11 @@ const App = observer(() => {
   const componentRef = React.useRef<HTMLDivElement>();
 
   const [images, setImages] = useState<string[]>([
-    "indian-pond-heron.jpg",
-    "mountain-imperial-pigeon.jpg",
+    "default-1.jpg",
+    "default-2.jpg",
+    "default-3.jpg",
+    "default-4.jpg",
+    "default-5.jpg",
   ]);
 
   const handleImagesChanged = (e: ChangeEvent<HTMLInputElement>) => {
