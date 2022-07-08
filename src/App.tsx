@@ -62,7 +62,7 @@ const App = observer(() => {
           gap: "2rem",
         }}
       >
-        <h1 style={{ color: "var(--primary)" }}>Photo Card 4x3</h1>
+        <h1 style={{ color: "var(--primary)" }}>🏞 Photo Card 4x3</h1>
         <ImageUpload onChange={handleImagesChanged} />
         {chunk(images, 2).map((images, i) => (
           <PhotoCard
