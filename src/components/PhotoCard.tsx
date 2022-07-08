@@ -1,24 +1,49 @@
-import React from "react";
+import { merge } from "lodash";
+import React, { useEffect, useState } from "react";
 
-const DividedPhotoCard = ({ src }: { src: string }) => {
+const DividedPhotoCard = ({ src, ppi }: { src: string; ppi: number }) => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const onMouseMove = (e: MouseEvent) => {
+    setMousePos({
+      x: e.offsetX - mousePos.x,
+      y: e.offsetY - mousePos.y,
+    });
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousemove", onMouseMove);
+    return () => {
+      document.removeEventListener("mousemove", onMouseMove);
+    };
+  }, []);
+
   return (
     <div
       className="photo-card-4x3"
       style={{ padding: "4%", overflow: "hidden" }}
     >
-      {src && (
-        <div
-          style={{
+      <div
+        style={merge<React.CSSProperties, any>(
+          {
             position: "relative",
             width: "100%",
             height: 0,
             padding: "100% 0 0",
             overflow: "hidden",
-            backgroundImage: `url("${src}")`,
-            backgroundSize: "cover",
-          }}
-        />
-      )}
+          },
+          src
+            ? {
+                backgroundImage: `url("${src}")`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+              }
+            : {
+                backgroundColor: "var(--disabled)",
+              }
+        )}
+      />
     </div>
   );
 };
@@ -43,12 +68,12 @@ export const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(
           border: "1px solid lightgrey",
         }}
       >
-        <DividedPhotoCard src={images[0]} />
+        <DividedPhotoCard src={images[0]} ppi={ppi} />
         <div
           className="photo-card-divider"
           style={{ borderLeft: "1px dashed lightgrey" }}
         />
-        <DividedPhotoCard src={images[1]} />
+        <DividedPhotoCard src={images[1]} ppi={ppi} />
       </div>
     );
   }

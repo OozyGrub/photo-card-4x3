@@ -11,11 +11,11 @@ const App = observer(() => {
   const componentRef = React.useRef<HTMLDivElement>();
 
   const [images, setImages] = useState<string[]>([
-    "default-1.jpg",
-    "default-2.jpg",
-    "default-3.jpg",
-    "default-4.jpg",
-    "default-5.jpg",
+    "default-1.jpeg",
+    "default-2.jpeg",
+    "default-3.jpeg",
+    "default-4.jpeg",
+    "default-5.jpeg",
   ]);
 
   const handleImagesChanged = (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,19 +50,19 @@ const App = observer(() => {
       style={{
         display: "grid",
         gap: "2rem",
-        margin: "2rem 2rem",
+        margin: "4rem 2rem",
       }}
     >
-      <ImageUpload onChange={handleImagesChanged} />
       <div
         className="photo-cards-layout"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "left",
+          display: "grid",
+          gridTemplateColumns: "min-content",
+          placeContent: "center",
           gap: "2rem",
         }}
       >
+        <ImageUpload onChange={handleImagesChanged} />
         {chunk(images, 2).map((images, i) => (
           <PhotoCard
             ppi={resolution.ppi}
@@ -73,10 +73,10 @@ const App = observer(() => {
             images={images}
           />
         ))}
+        <button onClick={handleDownload} style={{ placeSelf: "end" }}>
+          Download
+        </button>
       </div>
-      <button onClick={handleDownload} style={{ width: 300 }}>
-        Download
-      </button>
     </div>
   );
 });

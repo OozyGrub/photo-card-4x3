@@ -5,10 +5,11 @@ export enum ResolutionMode {
   EXPORT = "export",
 }
 class Resolution {
-  ppi: number = 150;
+  ppi: number = 0;
 
   constructor() {
     makeAutoObservable(this);
+    this.set(ResolutionMode.DISPLAY);
   }
 
   set(mode: ResolutionMode) {
@@ -17,7 +18,7 @@ class Resolution {
         this.ppi = 300;
         break;
       case ResolutionMode.DISPLAY:
-        this.ppi = 150;
+        this.ppi = 75;
         break;
     }
   }
