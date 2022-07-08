@@ -9,6 +9,7 @@ import { resolution, ResolutionMode } from "./store/resolution";
 const App = observer(() => {
   const componentsRef = React.useRef<HTMLDivElement[]>([]);
   const componentRef = React.useRef<HTMLDivElement>();
+  const [isExporting, setIsExporting] = useState(false);
 
   const [images, setImages] = useState<string[]>([
     "default-1.jpeg",
@@ -29,6 +30,7 @@ const App = observer(() => {
 
   const handleDownload = () => {
     resolution.set(ResolutionMode.EXPORT);
+    setIsExporting(true);
     setTimeout(() => {
       const prefix = "photo-card";
       const numCards = round(images.length / 2);
@@ -41,6 +43,7 @@ const App = observer(() => {
       }
 
       resolution.set(ResolutionMode.DISPLAY);
+      setIsExporting(false);
     });
   };
 
@@ -58,7 +61,7 @@ const App = observer(() => {
         style={{
           display: "grid",
           gridTemplateColumns: "min-content",
-          placeContent: "center",
+          placeContent: isExporting ? "start" : "center",
           gap: "2rem",
         }}
       >
