@@ -2,7 +2,6 @@ import { chunk, padStart, round } from "lodash";
 import { observer } from "mobx-react";
 import React, { ChangeEvent, useState } from "react";
 import { exportComponentAsJPEG } from "react-component-export-image";
-import "./App.css";
 import { resolution, ResolutionMode } from "./store/resolution";
 
 const DividedPhotoCard = ({ src }: { src: string }) => {
@@ -75,8 +74,8 @@ const App = observer(() => {
   const componentRef = React.useRef<HTMLDivElement>();
 
   const [images, setImages] = useState<string[]>([
-    "indian-pond-heron.JPG",
-    "indian-pond-heron.JPG",
+    "indian-pond-heron.jpg",
+    "mountain-imperial-pigeon.jpg",
   ]);
 
   const handleImagesChanged = (e: ChangeEvent<HTMLInputElement>) => {
