@@ -1,15 +1,15 @@
 import { chunk, padStart, round } from "lodash";
+import { observer } from "mobx-react";
 import React, { ChangeEvent, useState } from "react";
 import { exportComponentAsJPEG } from "react-component-export-image";
 import "./App.css";
-
-const PPI = 300;
+import { resolution, ResolutionMode } from "./store/resolution";
 
 const DividedPhotoCard = ({ src }: { src: string }) => {
   return (
     <div
       className="photo-card-4x3"
-      style={{ padding: 0.1 * PPI, overflow: "hidden" }}
+      style={{ padding: "4%", overflow: "hidden" }}
     >
       {src && (
         <div
@@ -30,9 +30,10 @@ const DividedPhotoCard = ({ src }: { src: string }) => {
 
 interface PhotoCardProps {
   images: string[];
+  ppi: number;
 }
 const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(
-  ({ images }, ref) => {
+  ({ images, ppi }, ref) => {
     return (
       <div
         ref={ref}
@@ -40,8 +41,8 @@ const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(
         style={{
           display: "grid",
           gridTemplateColumns: "1fr min-content 1fr",
-          width: 6 * PPI,
-          height: 4 * PPI,
+          width: 6 * ppi,
+          height: 4 * ppi,
           background: "white",
           border: "1px solid lightgrey",
         }}
@@ -69,7 +70,7 @@ const ImageUpload = ({
   );
 };
 
-function App() {
+const App = observer(() => {
   const componentsRef = React.useRef<HTMLDivElement[]>([]);
   const componentRef = React.useRef<HTMLDivElement>();
 
@@ -88,15 +89,20 @@ function App() {
   };
 
   const handleDownload = () => {
-    const prefix = "photo-card";
-    const numCards = round(images.length / 2);
+    resolution.set(ResolutionMode.EXPORT);
+    setTimeout(() => {
+      const prefix = "photo-card";
+      const numCards = round(images.length / 2);
 
-    for (let i = 0; i < numCards; i++) {
-      componentRef.current = componentsRef.current[i]!;
-      exportComponentAsJPEG(componentRef as any, {
-        fileName: `${prefix}-${padStart(`${i + 1}`, 3, "0")}`,
-      });
-    }
+      for (let i = 0; i < numCards; i++) {
+        componentRef.current = componentsRef.current[i]!;
+        exportComponentAsJPEG(componentRef as any, {
+          fileName: `${prefix}-${padStart(`${i + 1}`, 3, "0")}`,
+        });
+      }
+
+      resolution.set(ResolutionMode.DISPLAY);
+    });
   };
 
   return (
@@ -105,7 +111,7 @@ function App() {
       style={{
         display: "grid",
         gap: "2rem",
-        margin: "5rem 5rem",
+        margin: "2rem 2rem",
       }}
     >
       <ImageUpload onChange={handleImagesChanged} />
@@ -114,12 +120,13 @@ function App() {
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          alignItems: "left",
           gap: "2rem",
         }}
       >
         {chunk(images, 2).map((images, i) => (
           <PhotoCard
+            ppi={resolution.ppi}
             key={i}
             ref={(el) => {
               if (el) componentsRef.current[i] = el;
@@ -128,9 +135,11 @@ function App() {
           />
         ))}
       </div>
-      <button onClick={handleDownload}>Download</button>
+      <button onClick={handleDownload} style={{ width: 300 }}>
+        Download
+      </button>
     </div>
   );
-}
+});
 
 export default App;
