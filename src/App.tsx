@@ -1,46 +1,61 @@
-import { chunk } from "lodash";
+import { chunk, padStart, round } from "lodash";
 import React, { ChangeEvent, useState } from "react";
+import { exportComponentAsJPEG } from "react-component-export-image";
 import "./App.css";
+
+const PPI = 300;
 
 const DividedPhotoCard = ({ src }: { src: string }) => {
   return (
     <div
       className="photo-card-4x3"
-      style={{ padding: "10px", overflow: "hidden" }}
+      style={{ padding: 0.1 * PPI, overflow: "hidden" }}
     >
       {src && (
-        <img
-          src={src}
-          alt="indian-pond-heron"
-          style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover" }}
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: 0,
+            padding: "100% 0 0",
+            overflow: "hidden",
+            backgroundImage: `url("${src}")`,
+            backgroundSize: "cover",
+          }}
         />
       )}
     </div>
   );
 };
 
-const PhotoCard = ({ images }: { images: string[] }) => {
-  return (
-    <div
-      className="photo-card-4x6"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr min-content 1fr",
-        width: "6in",
-        height: "4in",
-        background: "white",
-        border: "1px solid lightgrey",
-      }}
-    >
-      <DividedPhotoCard src={images[0]} />
+interface PhotoCardProps {
+  images: string[];
+}
+const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(
+  ({ images }, ref) => {
+    return (
       <div
-        className="photo-card-divider"
-        style={{ borderLeft: "1px dashed lightgrey" }}
-      ></div>
-      <DividedPhotoCard src={images[1]} />
-    </div>
-  );
-};
+        ref={ref}
+        className="photo-card-4x6"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr min-content 1fr",
+          width: 6 * PPI,
+          height: 4 * PPI,
+          background: "white",
+          border: "1px solid lightgrey",
+        }}
+      >
+        <DividedPhotoCard src={images[0]} />
+        <div
+          className="photo-card-divider"
+          style={{ borderLeft: "1px dashed lightgrey" }}
+        />
+        <DividedPhotoCard src={images[1]} />
+      </div>
+    );
+  }
+);
 
 const ImageUpload = ({
   onChange,
@@ -55,7 +70,13 @@ const ImageUpload = ({
 };
 
 function App() {
-  const [images, setImages] = useState<string[]>([]);
+  const componentsRef = React.useRef<HTMLDivElement[]>([]);
+  const componentRef = React.useRef<HTMLDivElement>();
+
+  const [images, setImages] = useState<string[]>([
+    "indian-pond-heron.JPG",
+    "indian-pond-heron.JPG",
+  ]);
 
   const handleImagesChanged = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -65,6 +86,19 @@ function App() {
       setImages(urls);
     }
   };
+
+  const handleDownload = () => {
+    const prefix = "photo-card";
+    const numCards = round(images.length / 2);
+
+    for (let i = 0; i < numCards; i++) {
+      componentRef.current = componentsRef.current[i]!;
+      exportComponentAsJPEG(componentRef as any, {
+        fileName: `${prefix}-${padStart(`${i + 1}`, 3, "0")}`,
+      });
+    }
+  };
+
   return (
     <div
       className="wrapper"
@@ -84,10 +118,17 @@ function App() {
           gap: "2rem",
         }}
       >
-        {chunk(images, 2).map((images, idx) => (
-          <PhotoCard key={idx} images={images} />
+        {chunk(images, 2).map((images, i) => (
+          <PhotoCard
+            key={i}
+            ref={(el) => {
+              if (el) componentsRef.current[i] = el;
+            }}
+            images={images}
+          />
         ))}
       </div>
+      <button onClick={handleDownload}>Download</button>
     </div>
   );
 }
