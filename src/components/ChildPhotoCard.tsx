@@ -1,7 +1,13 @@
 import { clamp, merge } from "lodash";
 import { useEffect, useState } from "react";
 
-export const ChildPhotoCard = ({ src }: { src: string }) => {
+export const ChildPhotoCard = ({
+  src,
+  position,
+}: {
+  src: string;
+  position: "left" | "right";
+}) => {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [fromPos, setFromPos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -33,7 +39,7 @@ export const ChildPhotoCard = ({ src }: { src: string }) => {
     <div
       className="photo-card-4x3"
       style={{
-        padding: "4%",
+        padding: position === "left" ? "5% 4% 4% 6%" : "5% 6% 4% 4%",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",

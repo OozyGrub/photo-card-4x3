@@ -21,9 +21,9 @@ export const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(
           border: "1px solid lightgrey",
         }}
       >
-        <ChildPhotoCard src={images[0]} />
+        <ChildPhotoCard src={images[0]} position="left" />
         <div style={{ borderLeft: "1px dashed lightgrey" }} />
-        <ChildPhotoCard src={images[1]} />
+        <ChildPhotoCard src={images[1]} position="right" />
       </div>
     );
   }
