@@ -1,46 +1,18 @@
-# Getting Started with Create React App
+# 🏞 Photo Card 4x3
+I enjoy taking pictures and am constantly looking for cheap ways to maintain my collection. This project is a website that enables users who's willing to save budget to print 4 x 3 inch. photo (equivalent to Polaroid photos), vertically divided with a cut-line, at the standard printing size of 4 x 6 inches.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Price comparing
+Instant color film costs approximately `฿3.00` per piece. On the other hand, 4 x 6 / 2 inch. costs `฿2.50 / 2 = ฿1.25`. You can save up to `58.33%`
 
-## Available Scripts
+## Steps
+1. Enter the [website](https://photo-card-4x3.herokuapp.com/) and upload photos. <img width="971" alt="website" src="https://user-images.githubusercontent.com/20719656/193983750-a968f9a4-32d1-4eea-a2a9-83470c1cc4ad.png">
 
-In the project directory, you can run:
+2. Save images and send it to your prefered digital printing shop.
 
-### `yarn start`
+3. After receiving printed jobs, cut it in the half and you'll finally get budget mini-sized photo. <img width="971" alt="website" src="https://user-images.githubusercontent.com/20719656/193985356-f62d1f57-690f-461c-b718-b31bd7052db0.jpg">
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Contributions
+- add different printing format.
+- add caption insertion.
+- add vercel deployment.
