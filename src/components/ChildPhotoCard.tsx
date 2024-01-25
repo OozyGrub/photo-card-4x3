@@ -1,83 +1,101 @@
-import { clamp, merge } from "lodash";
-import { useEffect, useState } from "react";
+import { merge } from "lodash";
+import { cmToInches } from "../utilities/conversion";
+import { useMouseDragMove } from "../utilities/useMouseDragMove";
+import { useResize } from "../utilities/useResize";
 
 export const ChildPhotoCard = ({
   src,
   position,
+  ppi,
 }: {
   src: string;
   position: "left" | "right";
+  ppi: number;
 }) => {
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [fromPos, setFromPos] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const { onMove, onMoveCancelled, posX, posY, isDragging } =
+    useMouseDragMove();
+  const { size, onResizeIncreasing, onResizeDecreasing, onResizeCancelled } =
+    useResize(100);
 
-  const posX = clamp(
-    isDragging ? pos.x + fromPos.x - mousePos.x : pos.x,
-    0,
-    100
-  );
-  const posY = clamp(
-    isDragging ? pos.y + fromPos.y - mousePos.y : pos.y,
-    0,
-    100
-  );
-
-  useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
-    return () => {
-      document.removeEventListener("mousemove", onMouseMove);
-    };
-  }, []);
+  const borderStyle = {
+    borderTop: position === "left" ? "1px solid black" : undefined,
+    borderBottom: position === "left" ? undefined : "1px solid black",
+  };
 
   return (
-    <div
-      className="photo-card-4x3"
-      style={{
-        padding: position === "left" ? "5% 4% 4% 6%" : "5% 6% 4% 4%",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-      }}
-    >
+    <div style={{ display: "grid" }}>
       <div
-        style={merge<React.CSSProperties, any>(
-          {
+        className="photo-card-4x3"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: position === "left" ? "end" : "start",
+          flexDirection: "column",
+        }}
+      >
+        <div
+          style={merge<React.CSSProperties, any>(
+            {
+              position: "relative",
+              width: cmToInches(8.9) * ppi,
+              padding: `${cmToInches(6.4) * ppi}px 0 0`,
+              overflow: "hidden",
+              cursor: "move",
+              opacity: isDragging ? "50%" : "100%",
+              borderRight: "1px solid black",
+              borderLeft: "1px solid black",
+              ...borderStyle,
+              // filter: "brightness(1.1)",
+            },
+            src
+              ? {
+                  backgroundImage: `url("${src}")`,
+                  backgroundSize: `${size}%`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: `${posX}% ${posY}%`,
+                }
+              : {
+                  backgroundColor: "var(--disabled)",
+                }
+          )}
+          onMouseDown={onMove}
+          onMouseUp={onMoveCancelled}
+          onMouseOut={onMoveCancelled}
+        ></div>
+        <div
+          style={{
             position: "relative",
+            bottom: "50%",
             width: "100%",
             height: 0,
-            padding: "100% 0 0",
-            overflow: "hidden",
-            cursor: "move",
-            opacity: isDragging ? "50%" : "100%",
-          },
-          src
-            ? {
-                backgroundImage: `url("${src}")`,
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: `${posX}% ${posY}%`,
-              }
-            : {
-                backgroundColor: "var(--disabled)",
-              }
-        )}
-        onClick={(e) => {
-          if (isDragging) {
-            setFromPos({ x: posX, y: posY });
-            setPos({ x: posX, y: posY });
-          } else {
-            setFromPos({ x: e.clientX, y: e.clientY });
-          }
-          setIsDragging((o) => !o);
-        }}
-      />
+            right: -10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "end",
+            justifyContent: "center",
+            gap: "2rem",
+          }}
+        >
+          <div
+            style={{ width: 0, height: 0 }}
+            className="size-button"
+            onMouseDown={onResizeIncreasing}
+            onMouseUp={onResizeCancelled}
+            onMouseOut={onResizeCancelled}
+          >
+            ➕
+          </div>
+          <div
+            style={{ width: 0, height: 0 }}
+            className="size-button"
+            onMouseDown={onResizeDecreasing}
+            onMouseUp={onResizeCancelled}
+            onMouseOut={onResizeCancelled}
+          >
+            ➖
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
